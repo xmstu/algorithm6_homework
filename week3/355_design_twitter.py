@@ -46,11 +46,12 @@ class Twitter:
         self.user_follow_map[followerId].pop(followeeId, None) 
 
 
-class Tweet:
+class ListNode:
 
-    def __init__(self, tweetId: int, time: int) -> None:
+    def __init__(self, tweetId=None, time=None, next=None) -> None:
         self.tweetId = tweetId
         self.time = time
+        self.next = next
     
     def __lt__(self, other):
         if self.time > other.time:
@@ -62,13 +63,18 @@ class Tweet:
 class TwitterHeapq:
 
     def __init__(self):
-        self.user_tweet_map = defaultdict(list)
+        self.user_tweet_map = defaultdict(ListNode)
         self.user_follow_map = defaultdict(dict)
         self.time = 0
 
     def postTweet(self, userId: int, tweetId: int) -> None:
+        # 每次都 append 一个 元组进去
         self.time += 1
-        self.user_tweet_map[userId].append(Tweet(tweetId, self.time))
+        dummy_head = self.user_tweet_map[userId]
+        # 头插法
+        head = dummy_head.next
+        new_head = ListNode(tweetId, self.time, head)
+        dummy_head.next = new_head
 
     def getNewsFeed(self, userId: int) -> List[int]:
         # 获取用户前 10 条 推文, 按照时间倒序
@@ -80,28 +86,22 @@ class TwitterHeapq:
         k = 10
         top_k_list = []
         for userId in all_users:
-            tweets = self.get_user_latest_tweets(userId, k)
-            for tweet in tweets:
-                heappush(top_k_list, tweet)
+            dummy_head = self.user_tweet_map[userId]
+            head = dummy_head.next
+            if head:
+                heappush(top_k_list, head)
 
         top_10_list = []
         while top_k_list:
             if k == 0:
                 break
-            tweet = heappop(top_k_list)
-            top_10_list.append(tweet.tweetId)
+            head = heappop(top_k_list)
+            top_10_list.append(head.tweetId)
             k -= 1
+            if head.next:
+                heappush(top_k_list, head.next)
         
         return top_10_list
-    
-    def get_user_latest_tweets(self, userId: int, k: int):
-        tweets = []
-        for tweet in self.user_tweet_map.get(userId, [])[::-1]:
-            if k == 0:
-                break
-            tweets.append(tweet)
-            k -= 1
-        return tweets
 
     def follow(self, followerId: int, followeeId: int) -> None:
         self.user_follow_map[followerId][followeeId] = 1 
