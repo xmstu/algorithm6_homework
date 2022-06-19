@@ -68,7 +68,6 @@ class TwitterHeapq:
         self.time = 0
 
     def postTweet(self, userId: int, tweetId: int) -> None:
-        # 每次都 append 一个 元组进去
         self.time += 1
         dummy_head = self.user_tweet_map[userId]
         # 头插法
