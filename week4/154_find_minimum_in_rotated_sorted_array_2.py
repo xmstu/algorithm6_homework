@@ -31,6 +31,11 @@ class Solution:
 class Solution2:
 
     def findMin(self, nums: List[int]) -> int:   
+        """
+        nums[mid] 和 nums[right] 相等的情况, 不能确定最小值在 mid 的左边还是右边, 但是可以确定的是 right 可以 左移 一位
+        [1, 10, 10, 10, 10]
+        [3, 3, 3, 3, 3, 1, 3]
+        """
         left, right = 0, len(nums) - 1
         while left < right:
             mid = left + (right - left) // 2
@@ -38,7 +43,6 @@ class Solution2:
                 right = mid
             elif nums[mid] > nums[right]:
                 left = mid + 1
-            # 相等的情况, 不能确定最小值在 mid 的左边还是右边, 但是可以确定的是 right 可以 左移 一位
             else:
                 right -= 1
         
