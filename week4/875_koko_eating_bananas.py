@@ -5,7 +5,7 @@ from typing import List
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
         # left 是 香蕉堆的最小值, right 是香蕉堆的最大值
-        left, right = min(1, min(piles)), max(piles)
+        left, right = 1, max(piles)
         while left < right:
             mid = (left + right) // 2
             if self.canFinish(piles, h, mid):
