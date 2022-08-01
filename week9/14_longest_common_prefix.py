@@ -25,31 +25,27 @@ class Solution:
         return strs[0]
 
 
-class Solution:
+class Solution2:
     def longestCommonPrefix(self, strs: List[str]) -> str:
         """
         分治法, 将求最长公共前缀转化为一个个小问题, 然后再合并
         """
-        def isCommonPrefix(length):
-            str0, count = strs[0][:length], len(strs)
-            return all(strs[i][:length] == str0 for i in range(1, count))
+        def lcp(start, end):
+            if start == end:
+                return strs[start]
 
-        if not strs:
-            return ""
+            mid = (start + end) // 2
+            lcpLeft, lcpRight = lcp(start, mid), lcp(mid + 1, end)
+            minLength = min(len(lcpLeft), len(lcpRight))
+            for i in range(minLength):
+                if lcpLeft[i] != lcpRight[i]:
+                    return lcpLeft[:i]
 
-        minLength = min(len(s) for s in strs)
-        low, high = 0, minLength
-        while low < high:
-            mid = (high - low + 1) // 2 + low
-            if isCommonPrefix(mid):
-                low = mid
-            else:
-                high = mid - 1
+            return lcpLeft[:minLength]
 
-        return strs[0][:low]
+        return "" if not strs else lcp(0, len(strs) - 1)
 
-
-class Solution:
+class Solution3:
     def longestCommonPrefix(self, strs: List[str]) -> str:
         """
         二分答案求解
