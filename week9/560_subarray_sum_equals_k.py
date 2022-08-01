@@ -7,6 +7,13 @@ class Solution:
     给你一个整数数组 nums 和一个整数 k ，请你统计并返回 该数组中和为 k 的连续子数组的个数 。
     """
     def subarraySum(self, nums: List[int], k: int) -> int:
+        """
+        思路:
+            1. 构建前缀和数组
+            2. 计算 [left:right] 的区间和 是否等于 k
+
+        时间复杂度: O(n ^ 2), 过不了题目, 要优化
+        """
         # 构建前缀和数组
         n = len(nums)
         preSum = [0] * (n + 1)
@@ -19,7 +26,7 @@ class Solution:
         ans = 0
         for left in range(0, n):
             for right in range(left, n):
-                print(f"fuck left: {left}, right: {right}, right+1: {right+1}")
+                print(f"left: {left}, right: {right}, right+1: {right+1}")
                 if preSum[right+1] - preSum[left] == k:
                     ans += 1
         return ans        
